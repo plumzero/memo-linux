@@ -1,0 +1,132 @@
+
+linux 共享库路径配置
+	默认linux共享库搜索路径为 /lib 和 /usr/lib （不包含子目录），若共享库不在这两个路径，则不能自
+	动连接到（最典型的就是 /usr/local/lib ）。
+	解决方法有5种：
+		1. 连接时使用静态库.a文件。在g++命令上写入该.a文件的完整路径
+		2. 将共享库路径加入到 LD_LIBRARY_PATH 中，临时有效，多于一个用冒号隔开。
+		3. 不推荐
+		4. 编译时设定，编译源码时用参数：-Wl,-rpath指定动态搜索路径
+		5. 修改 /etc/ld.so.conf ，添加路径，运行 ldconfig 命令
+		在 /etc/ld.so.conf 文件中指定了默认的动态链接库查找路径，文件内容是 /etc/ld.so.conf.d/*.conf。
+		它间接的指定了定义路径的文件，我们只需要把需要的路径加到 /etc/ld.so.conf.d 目录下的任何一
+		个文件中，再运行 ldconfig 就可以了。
+		注意：
+			① 往 /lib 和 /usr/lib 里面加东西，是不用修改 /etc/ld.so.conf 的，但是完了之后要调一下
+			ldconfig，不然这个library会找不到
+			② 想往上面两个目录以外加东西的时候，一定要修改 /etc/ld.so.conf，然后再调用 ldconfig 。
+
+linux 下 gcc 默认搜索头文件及库文件的路径
+	头文件查找顺序
+		从 -I 开始；然后找gcc的环境变量 C_INCLUDE_PATH，CPLUS_INCLUDE_PATH，OBJC_INCLUDE_PATH；再找内
+		定目录(/usr/include 和 /usr/local/include)。
+	库文件查找顺序
+		从 -L 开始；再找 gcc 的环境变量 LIBRARY_PATH；再找内定目录(/lib 和 /lib64, /usr/lib 和 /usr/lib64
+		, /usr/local/lib 和 /usr/local/lib64)。
+	运行时动态库的搜索顺序
+		1. 编译目标代码时指定的动态库搜索路径；
+		2. 环境变量 LD_LIBRARY_PATH 指定的动态库搜索路径；
+		3. 配置文件 /etc/ld.so.conf 中指定的动态库搜索路径；
+		4. 默认的动态库搜索路径 /lib；
+		5. 默认的动态库搜索路径/usr/lib。
+		
+//	/usr/local/src中的包不指定路径默认安装时，bin命令在/usr/local/bin中，lib库在/usr/local/lib中，include头文件在/usr/local/include中
+			
+//	参考
+	linux下gcc默认搜索头文件及库文件的路径
+	https://blog.csdn.net/jingsihu/article/details/69389510
+	
+	linux 添加动态链接库路径
+	https://www.cnblogs.com/yangxunwu1992/p/6294350.html
+	
+	linux下添加动态链接库路径的方法
+	https://blog.csdn.net/zxh2075/article/details/54629318
+	
+ANSI C库文件
+	ctype.h			字符类型
+	errno.h			错误码
+	float.h			浮点常数
+	math.h			数学常数
+	stddef.h		标准定义
+	stdio.h			标准I/O
+	stdlib.h		工具函数
+	string.h		字符串操作
+	time.h			日期和时间
+	stdarg.h		可变参数表
+	signal.h		信号
+	setjmp.h		非局部跳转
+	local.h			本地信息
+	assert.h		程序断言
+
+内存操作相关
+	void *malloc(unsigned size);
+	void *calloc(unsigned n, unsigned size);
+	void free(void *ptr);		//释放内存后还须将ptr指向NULL
+	void *memset(void *source, char ch, unsigned size);	//malloc之后使用
+	void *memcpy(void *destin, void *source, unsigned n);
+	void *memmove(void *destin, void *source, unsigned n);
+
+ANSI C标准函数库中提供了用于将
+	字符串转换为整型的函数：
+	int atoi(const char * nptr);
+	int atol(const char * nptr);
+	long int strtol(const char *nptr, char **endptr, int base);	//一参：目标字符串 二参：条件结束符 三参：转换后的进制表示
+	unsigned long int strtol(const char *nptr, char **endptr, int base);
+	
+	字符串转换为实型的函数：
+	double atof(const char *nptr);
+	double strtod(const char *nptr, char **endptr);		//参数nptr可包含正负号、小数点或E(e)来表示指数部分，如123.456或789e-3
+	
+	整型转换为字符串的函数：（只在windows下使用，在UNIX/Linux使用时会提示未定义）
+	char *itoa(int value, char *string, int radix);		//二参：指向转换后的字符串 三参：转换数字的进制
+	char *ltoa(long value, char *string, int radix);
+	char *ultoa(long value, char *string, int radix);
+	Linux下应该使用sprintf函数实现将整型转换为字符串的功能
+	int sprintf(char *buffer, const char *format [,argument]...);	//一参：转换后内存地址	二参：格式说明符
+	
+	实型转换为字符串型：
+	char *ecvt(double value, int ndigit, int *decpt, int *sign);	//二参：与一参位数比较填0或四舍五入 三参：返回数值中小数点位置 四参：待转换数的符号，0正1负
+	char *fcvt(double value, int ndigit, int *decpt, int *sign);
+	char *gcvt(double value, int ndigit, char *buf);				//三参：指向转换后的字符串指针
+	
+日期与时间
+	time_t time(time_t *timer);	//time_t长整型 参：为NULL是返回当前时间，不为NULL时用于设置时间
+	struct tm *localtime(const time_t *timer);
+		参：由time()函数获得的机器时间
+		tm结构体：
+			struct tm
+			{
+				int tm_sec;
+				int tm_min;
+				int tm_hour;
+				int tm_mday;
+				int tm_mon;
+				int tm_year;
+				int tm_wday;
+				int tm_yday;
+				int tm_isdst;
+			}
+	char *asctime(struct tm *ptr);	//将时间转换为字符串的格式，即 /周/月/日/时/分/秒/年 的形式。		参：应通过localtime()和time()获得
+	char *ctime(long time);			//返回值与asctime()函数完全相同		参：应通过time()获得
+	补充：
+	unsigned sleep(unsigned seconds);	//将程序休眠（挂起）一段时间
+	void delay(unsigned milliseconds);	//与sleep功能类似 ，但以毫秒为参
+	
+随机函数
+	int rand(void);		//产生一个范围在0到RAND_MAX之间的伪随机数。如果产生X~Y之间的数，可以 rand()%(Y-X+1)+X
+	void srand(unsigned int seed);	//为rand设置随机数种子，产生真正意义上的随机数
+	long int random(int num);
+	void srandom(unsigned int seed);
+		3 4 函数与 1 2 函数功能相似，不同在于返回值类型，但在32位系统上没有这种区别。
+	double drand48(void);	//返回0.0~1.0之间的浮点型伪随机数
+	double erand48(unsigned short int xsubi[3]);	//返回0.0~1.0之间的真正意义上的随机数，不是drand48的附属
+	
+系统调用时，通常返回值为-1时表示出错。
+系统调用失败时，会将全局整型变量errno设置为一个正值，以标识具体的错误。程序应包含<errno.h>头文件，该文件提供了对errno的声明，以及一组针对各种错误
+而定义的常量。
+如果调用系统调用和库函数成功，errno绝不会被重置为0，故此，该变量值不为0，可能是之前调用失败造成的。
+因此，在进行错误检查时，必须坚持首先检查函数的返回值是否表明调用出错，然后再检查errno确定错误原因。
+少数系统调用（比如，getpriority()）在调用成功后，也会返回-1。要判断此类系统调用是否发生错误，应在调用前将errno置为0，并在调用后对其进行检查。
+系统调用失败后，常见做法之一是根据errno值打印错误消息。提供库函数perror()和strerror()，就是出于这一目的。
+	函数perror()会打印出其msg参数所指向的字符串，紧跟一条与当前errno值相对应的消息。
+	函数strerror()会针对其errnum参数中所给定的错误号，返回相应的错误字符串。

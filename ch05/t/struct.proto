@@ -1,0 +1,66 @@
+
+syntax = "proto3";
+package mam;
+
+message TradeOrder
+{
+    int32 reqId = 1;
+    string orderId = 2;
+    string symbol = 3;
+    int32 orderType = 4;
+    int32 tradeType = 5;
+    int32 orderPrice = 6;
+    int32 orderVolume = 7;
+    int32 nTime = 8;
+    int32 accountId = 9;
+    string tag = 10;
+    int32 timeout = 11;
+    bool force = 12;
+    int64 createTime = 13;
+    int64 submitTime = 14;
+    int64 acceptTime = 15;
+    int64 closeTime = 16;
+    int32 dealPrice = 17;
+    int32 dealVolume = 18;
+    OrderStatusType status = 19;
+    TradeOrderErrorCode errCode = 20;
+    string errDetail = 21;
+    int32 tradedVolume = 22;
+    int32 fixing = 23;
+    string traderId = 24;
+    int32  originType = 25;
+    ExtendPriceType priceType = 26;
+    int64 matchedAmount = 27;
+	
+    int32 Delay_Receive_Insert = 60;
+    int32 Delay_Insert_OnInsert = 61;
+    int32 Delay_Insert_Accept = 62;
+    int32 Delay_Accept_Match = 63;
+}
+
+enum OrderStatusType
+{
+    OrderStatus_None = 0;
+    OrderStatus_Accepted = 1;
+    OrderStatus_TotalMatch = 2;
+    OrderStatus_PartialRemoved = 3;
+    OrderStatus_TotalRemoved = 4;
+    OrderStatus_Fail = 5;
+}
+
+enum TradeOrderErrorCode
+{
+    JErrorType_None = 0;
+    JErrorType_TooHighFrequency = 100;
+    JErrorType_OrderNotFound = 101;
+    JErrorType_NotTradingTime = 102;
+    JErrorType_OverHighOrLow = 103;
+    JErrorType_InvalidVol = 104;
+}
+
+enum ExtendPriceType {
+    EPT_None = 0;
+    EPT_Fixed = 1;
+    EPT_HighLimit = 2;
+    EPT_LowLimit = 3;  
+}
