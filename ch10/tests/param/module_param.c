@@ -1,3 +1,4 @@
+
 #include <linux/init.h>
 #include <linux/module.h>
 
@@ -14,7 +15,7 @@
  *  	cp ./module_param.ko /opt/drivers
  *  	cd /opt/drivers
  *  2.加载内核程序，同时传参。参数结构 name=value = 两边不允许有空格，参数与参数之间使用空格分隔
- *  	insmod module_param.ko irq=2000 pstr=china fish=1,2,3,4,5,6 
+ *  	insmod module_param.ko irq=2000 pstr=china fish=1,2,3,4,5,6
  *  3.查看内核是否成功加载模块
  *  	lsmod | grep module_param
  *	 	cat /proc/modules | grep module_param
@@ -117,6 +118,7 @@ static void module_param_exit(void)
 
 module_init(module_param_init);
 module_exit(module_param_exit);
+
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Create by C");
 MODULE_DESCRIPTION("How to build a module");

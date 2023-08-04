@@ -1,5 +1,5 @@
 ifneq ($(KERNELRELEASE),)
-	obj-m := module_param.o
+	obj-m := module_hello.o
 else
 	KDIR := /lib/modules/$(shell uname -r)/build
 	PWD := $(shell pwd)
@@ -7,5 +7,5 @@ else
 all:
 	make -C $(KDIR) M=$(PWD) modules
 clean:
-	rm -f *.ko *.o *.symvers *.order *.mod.o *.mod.c
+	make -C $(KDIR) M=$(PWD) clean
 endif
