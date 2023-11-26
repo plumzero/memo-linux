@@ -1,20 +1,12 @@
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0.2)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -W -std=c++11 -g -O2 -Wall -W")
+project("c test" C)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -W -g -O2")
 
 file(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
 foreach(file ${files})
     get_filename_component(name ${file} NAME_WE)
     add_executable(${name} ${file})
-    target_link_libraries(${name} pthread)
-endforeach()
-
-file(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/*.cc")
-foreach(file ${files})
-    get_filename_component(name ${file} NAME_WE)
-    add_executable(${name} ${file})
-    target_link_libraries(${name} pthread)
 endforeach()

@@ -1,0 +1,5 @@
+package:helloworld
+version:1.0
+architecture:amd64
+maintainer:wit
+description: deb package demo
