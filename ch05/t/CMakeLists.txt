@@ -39,6 +39,16 @@ link_directories(${protobuf_LIBRARY_PATH})
 include_directories(.)
 
 #
+#
+#
+file(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/03*.cpp")
+foreach(file ${files})
+    get_filename_component(name ${file} NAME_WE)
+    add_executable(${name} ${file})
+    target_link_libraries(${name} rt)
+endforeach()
+
+#
 # 简单使用
 #
 file(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/05_01*.cpp")
@@ -63,9 +73,9 @@ endforeach()
 #
 # protoc --cpp_out=. struct.proto
 #
-file(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/05_03*.cpp")
-foreach(file ${files})
-    get_filename_component(name ${file} NAME_WE)
-    add_executable(${name} ${file} struct.pb.cc)
-    target_link_libraries(${name} rt pthread)
-endforeach()
+# file(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/05_03*.cpp")
+# foreach(file ${files})
+#     get_filename_component(name ${file} NAME_WE)
+#     add_executable(${name} ${file} struct.pb.cc)
+#     target_link_libraries(${name} rt pthread)
+# endforeach()
