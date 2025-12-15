@@ -1,4 +1,17 @@
 
+主要是以 C/S 形式示例几种 I/O 模型的使用方法。
+
+### 参考
+
+* [浅谈TCP/IP网络编程中socket的行为](https://www.cnblogs.com/junneyang/p/6126635.html)
+
+### 内容
+
+* [socket](01_socket)
+* [select](02_select)
+* [poll](03_poll)
+
+
 ### 在连接中 EOF 意味着什么
 
 EOF 的打印值为 0
